@@ -90,7 +90,7 @@ cdef char* CODE2CIGAR= "MIDNSHP=XB"
 cdef int NCIGAR_CODES = 10
 
 # dimensioned for 8000 pileup limit (+ insertions/deletions)
-cdef uint32_t MAX_PILEUP_BUFFER_SIZE = 10000
+cdef uint32_t MAX_PILEUP_BUFFER_SIZE = 15000
 
 if IS_PYTHON3:
     CIGAR2CODE = dict([y, x] for x, y in enumerate(CODE2CIGAR))
