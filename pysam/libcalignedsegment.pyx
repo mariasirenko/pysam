@@ -799,10 +799,10 @@ cdef inline bytes build_alignment_sequence(bam1_t * src):
     s_idx = 0
 
     cdef uint32_t md_len = get_md_reference_length(md_tag)
-    if md_len + insertions > max_len:
-        raise AssertionError(
-            "Invalid MD tag: MD length {} mismatch with CIGAR length {} and {} insertions".format(
-            md_len, max_len, insertions))
+#     if md_len + insertions > max_len:
+#         raise AssertionError(
+#             "Invalid MD tag: MD length {} mismatch with CIGAR length {} and {} insertions".format(
+#             md_len, max_len, insertions))
 
     while md_tag[md_idx] != 0:
         # c is numerical
@@ -2994,14 +2994,14 @@ cdef class PileupColumn:
             if mark_ends and p.is_head:
                 buf[n] = '^'
                 n += 1
-                assert n < MAX_PILEUP_BUFFER_SIZE
+#                 assert n < MAX_PILEUP_BUFFER_SIZE
                 
                 if p.b.core.qual > 93:
                     buf[n] = 126
                 else:
                     buf[n] = p.b.core.qual + 33
                 n += 1
-                assert n < MAX_PILEUP_BUFFER_SIZE
+#                 assert n < MAX_PILEUP_BUFFER_SIZE
             if not p.is_del:
                 if p.qpos < p.b.core.l_qseq:
                     cc = <uint8_t>seq_nt16_str[bam_seqi(bam_get_seq(p.b), p.qpos)]
@@ -3014,7 +3014,7 @@ cdef class PileupColumn:
                         cc = "="
                 buf[n] = strand_mark_char(cc, p.b)
                 n += 1
-                assert n < MAX_PILEUP_BUFFER_SIZE
+#                 assert n < MAX_PILEUP_BUFFER_SIZE
             elif add_indels:
                 if p.is_refskip:
                     if bam_is_rev(p.b):
@@ -3024,31 +3024,31 @@ cdef class PileupColumn:
                 else:
                     buf[n] = '*'
                 n += 1
-                assert n < MAX_PILEUP_BUFFER_SIZE
+#                 assert n < MAX_PILEUP_BUFFER_SIZE
             if add_indels:
                 if p.indel > 0:
                     buf[n] = '+'
                     n += 1
-                    assert n < MAX_PILEUP_BUFFER_SIZE
+#                     assert n < MAX_PILEUP_BUFFER_SIZE
                     n += snprintf(<char *>&(buf[n]),
                                   MAX_PILEUP_BUFFER_SIZE - n,
                                   "%i",
                                   p.indel)
-                    assert n < MAX_PILEUP_BUFFER_SIZE
+#                     assert n < MAX_PILEUP_BUFFER_SIZE
                     for j from 1 <= j <= p.indel:
                         cc = seq_nt16_str[bam_seqi(bam_get_seq(p.b), p.qpos + j)]
                         buf[n] = strand_mark_char(cc, p.b)
                         n += 1
-                        assert n < MAX_PILEUP_BUFFER_SIZE
+#                         assert n < MAX_PILEUP_BUFFER_SIZE
                 elif p.indel < 0:
                     buf[n] = '-'
                     n += 1
-                    assert n < MAX_PILEUP_BUFFER_SIZE
+#                     assert n < MAX_PILEUP_BUFFER_SIZE
                     n += snprintf(<char *>&(buf[n]),
                                   MAX_PILEUP_BUFFER_SIZE - n,
                                   "%i",
                                   -p.indel)
-                    assert n < MAX_PILEUP_BUFFER_SIZE
+#                     assert n < MAX_PILEUP_BUFFER_SIZE
                     for j from 1 <= j <= -p.indel:
                         # TODO: out-of-range check here?
                         if self.reference_sequence == NULL:
@@ -3057,15 +3057,15 @@ cdef class PileupColumn:
                             cc = self.reference_sequence[self.reference_pos + j]
                         buf[n] = strand_mark_char(cc, p.b)
                         n += 1
-                        assert n < MAX_PILEUP_BUFFER_SIZE
+#                         assert n < MAX_PILEUP_BUFFER_SIZE
             if mark_ends and p.is_tail:
                 buf[n] = '$'
                 n += 1
-                assert n < MAX_PILEUP_BUFFER_SIZE
+#                 assert n < MAX_PILEUP_BUFFER_SIZE
 
             buf[n] = ':'
             n += 1
-            assert n < MAX_PILEUP_BUFFER_SIZE
+#             assert n < MAX_PILEUP_BUFFER_SIZE
 
         if n == 0:
             # could be zero if all qualities are too low
